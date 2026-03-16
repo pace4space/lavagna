@@ -7,9 +7,11 @@ COPY project /app
 WORKDIR /app
 RUN mvn clean package -DskipTests
 
+# Use bash /dev/tcp for database readiness check (no external tools needed)
+
 # Use local file as database - who cares
-ENV DB_DIALECT HSQLDB
-ENV DB_URL jdbc:hsqldb:file:lavagna
+ENV DB_DIALECT MYSQL
+ENV DB_URL jdbc:mysql://mysql:3306/lavagna?autoReconnect=true&useSSL=false
 ENV DB_USER sa
 ENV DB_PASS ""
 ENV SPRING_PROFILE dev

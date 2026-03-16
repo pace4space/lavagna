@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Copy built static files to shared volume
+cp -r target/lavagna/* /app/static/
+
 # Extract host from DB_URL
 host=$(echo "$DB_URL" | sed 's|jdbc:mysql://\([^:]*\):.*|\1|')
 

@@ -3,7 +3,7 @@ FROM maven:3.6.3-openjdk-8
 EXPOSE 8080
 
 # Build from project files
-COPY . /app
+COPY project /app
 WORKDIR /app
 RUN mvn clean package -DskipTests
 

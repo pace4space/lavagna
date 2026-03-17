@@ -6,6 +6,8 @@ COPY project .
 
 # Run build, creates target/lavagna-jetty-console.war
 RUN mvn clean package -DskipTests
+RUN mvn stampo:build
+# RUN mvn stampo:build -DoutputDir=/stampo/stampo-build/lavagna/help
 
 COPY entrypoint.sh .
 
@@ -16,18 +18,15 @@ FROM eclipse-temurin:8-jre-alpine
 EXPOSE 8080
 WORKDIR /app
 
-# Copy only the built WAR from builder stage
+# Copy WAR (and help files) from builder stage
 COPY --from=builder /app/target/lavagna-jetty-console.war .
+# COPY --from=builder /stampo/stampo-build/lavagna/help /app/help
+# COPY target/lavagna/help /app/help
+COPY --from=builder /app/target/lavagna/help /app/docs-dist
 
 # Copy entrypoint script from builder stage
-COPY --from=builder /app/entrypoint.sh .
+# COPY --from=builder /app/entrypoint.sh .
+COPY entrypoint.sh .
 RUN chmod +x entrypoint.sh
-
-# Database config
-# ENV DB_DIALECT MYSQL
-# ENV DB_URL jdbc:mysql://mysql:3306/lavagna?autoReconnect=true&useSSL=false
-# ENV DB_USER sa
-# ENV DB_PASS ""
-# ENV SPRING_PROFILE dev
 
 ENTRYPOINT ["./entrypoint.sh"]
